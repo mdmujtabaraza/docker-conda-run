@@ -1,0 +1,20 @@
+# Reference: https://medium.com/@chadlagore/conda-environments-with-docker-82cdc9d25754
+
+FROM continuumio/miniconda3
+
+# Using the environment.yml to create the conda environment.
+ADD environment.yml /tmp/environment.yml
+RUN conda env create -f /tmp/environment.yml
+
+# Pull the environment name out of the environment.yml
+RUN echo "source activate $(head -1 /tmp/environment.yml | cut -d' ' -f2)" > ~/.bashrc
+ENV PATH /opt/conda/envs/$(head -1 /tmp/environment.yml | cut -d' ' -f2)/bin:$PATH
+
+
+#RUN conda create -n env python=3.6
+#RUN echo "source activate env" > ~/.bashrc
+#ENV PATH /opt/conda/envs/env/bin:$PATH
+
+# Final commands to execute on terminal
+# sudo docker build -t condatest .
+# sudo docker run -it condatest
